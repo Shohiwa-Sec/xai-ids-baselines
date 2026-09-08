@@ -1,0 +1,16 @@
+# Local environment, datasets and large experiment outputs
+.venv/
+data/
+results/
+__pycache__/
+*.py[cod]
+*.joblib
+*.keras
+*.h5
+.env
+.env.*
+.vscode/
+# Early drafts NOT used for the reported runs
+train_random_forest.py
+RF_baseline.py
+BASELINE_NOTES.md

@@ -1,0 +1,137 @@
+[
+  {
+    "model": "Random Forest",
+    "run": "original_rf_saved_20260907_205032_990527",
+    "upstream_source": "https://github.com/ogarreche/XAI_NIDS/blob/main/NSL-KDD/RF_ALL_FINAL.py",
+    "original_sha256": "2ec93cc53b312f66e3180175576fcaaf3ad7811607353ad4936e231b49f3e26c",
+    "dataset_sha256": {
+      "KDDTrain+.txt": "1b86d2f957b33082081bba410fe129b475efebcc13c9014c3f447c8271aadf95",
+      "KDDTest+.txt": "fa46b0935342616aa83b7c2578db355b6a7aaabbc492248172c7a1e8b7ab8f84"
+    },
+    "python": "3.11.9",
+    "packages_recorded_at_run": {
+      "numpy": "2.4.6",
+      "pandas": "3.0.5",
+      "scikit-learn": "1.9.0",
+      "joblib": "1.6.0"
+    },
+    "execution": "Original prefix through evaluation, before Y_train.flatten and explanation section.",
+    "changes": "None"
+  },
+  {
+    "model": "AdaBoost",
+    "run": "original_ada_saved_20260907_205917_661262",
+    "upstream_source": "https://github.com/ogarreche/XAI_NIDS/blob/main/NSL-KDD/ADA_ALL_FINAL.py",
+    "original_sha256": "862f1bd142eb110863f1576f3786819ad59046cf4fc4ba7a26231be1f7521b6f",
+    "dataset_sha256": {
+      "KDDTrain+.txt": "1b86d2f957b33082081bba410fe129b475efebcc13c9014c3f447c8271aadf95",
+      "KDDTest+.txt": "fa46b0935342616aa83b7c2578db355b6a7aaabbc492248172c7a1e8b7ab8f84"
+    },
+    "python": "3.11.9",
+    "packages_recorded_at_run": {
+      "numpy": "2.4.6",
+      "pandas": "3.0.5",
+      "scikit-learn": "1.9.0",
+      "joblib": "1.6.0"
+    },
+    "execution": "Original prefix through evaluation, before explanation example selection.",
+    "changes": "None"
+  },
+  {
+    "model": "KNN",
+    "run": "original_knn_saved_20260907_210221_610811",
+    "upstream_source": "https://github.com/ogarreche/XAI_NIDS/blob/main/NSL-KDD/KNN_ALL_FINAL.py",
+    "original_sha256": "528213837ddaed6de5cd9ecc12509f21c4d81175c7f4b63787f8ba9d2eaa0779",
+    "dataset_sha256": {
+      "KDDTrain+.txt": "1b86d2f957b33082081bba410fe129b475efebcc13c9014c3f447c8271aadf95",
+      "KDDTest+.txt": "fa46b0935342616aa83b7c2578db355b6a7aaabbc492248172c7a1e8b7ab8f84"
+    },
+    "python": "3.11.9",
+    "packages_recorded_at_run": {
+      "numpy": "2.4.6",
+      "pandas": "3.0.5",
+      "scikit-learn": "1.9.0",
+      "joblib": "1.6.0"
+    },
+    "execution": "Original training prefix plus original evaluation block; intervening XAI sections skipped.",
+    "changes": "None"
+  },
+  {
+    "model": "LightGBM",
+    "run": "original_light_saved_20260907_215051_023202",
+    "upstream_source": "https://github.com/ogarreche/XAI_NIDS/blob/main/NSL-KDD/Light_ALL_FINAL.py",
+    "original_sha256": "6d7625f0e5001f3ffbac521024fa7af8ce7771384e90b29862e5adcd108065bb",
+    "dataset_sha256": {
+      "KDDTrain+.txt": "1b86d2f957b33082081bba410fe129b475efebcc13c9014c3f447c8271aadf95",
+      "KDDTest+.txt": "fa46b0935342616aa83b7c2578db355b6a7aaabbc492248172c7a1e8b7ab8f84"
+    },
+    "python": "3.11.9",
+    "packages_recorded_at_run": {
+      "numpy": "2.4.6",
+      "pandas": "3.0.5",
+      "scikit-learn": "1.9.0",
+      "joblib": "1.6.0"
+    },
+    "execution": "Original training prefix plus original evaluation block; intervening XAI sections skipped.",
+    "changes": "Skip two references to undefined selected_features; retain all features. All other original preprocessing and training retained."
+  },
+  {
+    "model": "SVM (SGD)",
+    "run": "original_svm_saved_20260907_215351_682110",
+    "upstream_source": "https://github.com/ogarreche/XAI_NIDS/blob/main/NSL-KDD/SVM_ALL_FINAL.py",
+    "original_sha256": "ae9426b95d0fe5e20352d0d9a999656046272b91882629e1ad83f1c8ecfeabdc",
+    "dataset_sha256": {
+      "KDDTrain+.txt": "1b86d2f957b33082081bba410fe129b475efebcc13c9014c3f447c8271aadf95",
+      "KDDTest+.txt": "fa46b0935342616aa83b7c2578db355b6a7aaabbc492248172c7a1e8b7ab8f84"
+    },
+    "python": "3.11.9",
+    "packages_recorded_at_run": {
+      "numpy": "2.4.6",
+      "pandas": "3.0.5",
+      "scikit-learn": "1.9.0",
+      "joblib": "1.6.0"
+    },
+    "execution": "Original training prefix plus original evaluation block; intervening XAI sections skipped.",
+    "changes": "Reorder test columns by name to match training before original scaler and classifier calls; feature values and all model settings unchanged."
+  },
+  {
+    "model": "MLP",
+    "run": "original_mlp_saved_20260907_220612_850351",
+    "upstream_source": "https://github.com/ogarreche/XAI_NIDS/blob/main/NSL-KDD/MLP_ALL_FINAL.py",
+    "original_sha256": "89efc1a52d758f746046585a678ee9bd60574f321e64db56ac4364fc6c3255dc",
+    "dataset_sha256": {
+      "KDDTrain+.txt": "1b86d2f957b33082081bba410fe129b475efebcc13c9014c3f447c8271aadf95",
+      "KDDTest+.txt": "fa46b0935342616aa83b7c2578db355b6a7aaabbc492248172c7a1e8b7ab8f84"
+    },
+    "python": "3.11.9",
+    "packages_recorded_at_run": {
+      "numpy": "2.4.6",
+      "pandas": "3.0.5",
+      "scikit-learn": "1.9.0",
+      "joblib": "1.6.0"
+    },
+    "execution": "Original training prefix plus original evaluation block; intervening XAI sections skipped.",
+    "changes": "None"
+  },
+  {
+    "model": "DNN",
+    "run": "original_dnn_saved_20260907_223242_369146",
+    "upstream_source": "https://github.com/ogarreche/XAI_NIDS/blob/main/NSL-KDD/DNN_ALL_FINAL.py",
+    "original_sha256": "3e717798d2a7bfcf80eab9a42f3d7e2c4d2f0aeba65294bb3c532e6b49ed7953",
+    "dataset_sha256": {
+      "KDDTrain+.txt": "1b86d2f957b33082081bba410fe129b475efebcc13c9014c3f447c8271aadf95",
+      "KDDTest+.txt": "fa46b0935342616aa83b7c2578db355b6a7aaabbc492248172c7a1e8b7ab8f84"
+    },
+    "python": "3.11.9",
+    "packages_recorded_at_run": {
+      "numpy": "2.4.6",
+      "pandas": "3.0.5",
+      "scikit-learn": "1.9.0",
+      "joblib": "1.6.0",
+      "tensorflow": "2.21.0",
+      "keras": "3.15.1"
+    },
+    "execution": "Original two 50-epoch training calls and final evaluation; intervening SHAP skipped; two normalization declarations restored.",
+    "changes": "Restore commented scaler and function declarations. Both original 50-epoch fits retained. No other preprocessing or training changes."
+  }
+]
