@@ -1,13 +1,13 @@
 # NSL-KDD baseline runs
 
-Joseph Stokes - undergraduate research with Dr. Mustafa Abdallah.
+Joseph Stokes and Yoma Ogueh - undergraduate research partners working with Dr. Mustafa Abdallah.
 
-This repository records the code used to train seven model types on NSL-KDD in September 2026. The aim was to become familiar with the group's existing implementation and preserve preliminary baselines for discussion before XAI-Guided Evasion Attack (XGEA) experiments. No XGEA experiments are implemented here.
+This repository documents our joint research and the code used to train seven model types on NSL-KDD in September 2026. Our aim was to become familiar with the group's existing implementation and preserve preliminary baselines for discussion before XAI-Guided Evasion Attack (XGEA) experiments. We have not implemented XGEA experiments here yet.
 
 ## Start here: which code was used?
 
 - `*_ALL_FINAL_original.py`: downloaded copies of the authors' [XAI_NIDS NSL-KDD scripts](https://github.com/ogarreche/XAI_NIDS/tree/main/NSL-KDD). These original files were not edited.
-- `save_original_*_run.py`: AI-assisted launchers prepared with Codex and run locally by Joseph. They execute the original training/evaluation sections, skip explanation experiments and save models, processed inputs, predictions and logs. Three launchers apply explicit execution fixes described below.
+- `save_original_*_run.py`: AI-assisted launchers prepared with Codex for our baseline runs. They execute the original training/evaluation sections, skip explanation experiments and save models, processed inputs, predictions and logs. Three launchers apply explicit execution fixes described below.
 - `reports/result_manifest.json`: metrics calculated from saved test predictions, with the exact run folders used.
 - `reports/source_provenance.json`: upstream URLs, original-source hashes, dataset hashes, recorded package versions and execution changes for those runs.
 - `requirements-lock.txt`: package versions exported from the working Python environment when this repository was prepared. Some dependencies were installed between runs; per-run metadata provides the versions recorded at each run.
@@ -62,7 +62,7 @@ Run one command at a time. Each launcher locates its own data folder, writes to 
 
 MLP and DNN can remain quiet during training. DNN retains two consecutive 50-epoch fits; the first training-time message does not indicate completion. Wait for the saved-model message and the terminal prompt. Several original estimators have no fixed seed, so repeated scores need not be identical.
 
-## Recorded results
+## Our recorded results
 
 Overall accuracy is computed from the saved five-category predictions, not the per-class one-versus-rest accuracy printed by the original scripts.
 
