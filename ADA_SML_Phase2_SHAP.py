@@ -1,0 +1,596 @@
+#Importing libraries
+#----------------------------------------------------------------------------------------------------------
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+
+#Loading numpy
+import numpy as np
+# Setting random seed
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import auc
+#from sklearn.metrics import auc_score
+from sklearn.multiclass import OneVsRestClassifier
+from collections import Counter
+from sklearn.preprocessing import label_binarize
+import time
+import shap
+np.random.seed(0)
+from sklearn.ensemble import AdaBoostRegressor
+from sklearn.tree import DecisionTreeRegressor
+import matplotlib.pyplot as plt
+import sklearn
+from imblearn.over_sampling import RandomOverSampler
+#----------------------------------------------------------------------------------------------------------
+'''
+########################################### SIMARGL Features ########################################
+'''
+
+# Select which feature method you want to use by uncommenting it.
+
+'''
+all features
+'''
+
+req_cols = ['FLOW_DURATION_MILLISECONDS','FIRST_SWITCHED',
+            'TOTAL_FLOWS_EXP','TCP_WIN_MSS_IN','LAST_SWITCHED',
+            'TCP_WIN_MAX_IN','TCP_WIN_MIN_IN','TCP_WIN_MIN_OUT',
+           'PROTOCOL','TCP_WIN_MAX_OUT','TCP_FLAGS',
+            'TCP_WIN_SCALE_OUT','TCP_WIN_SCALE_IN','SRC_TOS',
+            'DST_TOS','FLOW_ID','L4_SRC_PORT','L4_DST_PORT',
+           'MIN_IP_PKT_LEN','MAX_IP_PKT_LEN','TOTAL_PKTS_EXP',
+           'TOTAL_BYTES_EXP','IN_BYTES','IN_PKTS','OUT_BYTES','OUT_PKTS',
+            'ALERT']
+
+
+
+'''
+##################################### For K = 15 ################################################
+'''
+
+'''
+ k gain according CICIDS paper
+'''
+
+'''
+req_cols =  [ 'FLOW_DURATION_MILLISECONDS', 'FIRST_SWITCHED', 'TOTAL_FLOWS_EXP', 'TCP_WIN_MSS_IN', 'LAST_SWITCHED', 'TCP_WIN_MAX_IN', 'TCP_WIN_MIN_IN', 'TCP_WIN_MIN_OUT', 'PROTOCOL', 'TCP_WIN_MAX_OUT','ALERT' ]
+
+
+'''
+'''
+##################################### For K = 10 ################################################
+'''
+
+'''
+ 1 - Common features by overall rank
+'''
+
+'''
+
+req_cols =  [ 'TCP_WIN_SCALE_IN', 'TCP_WIN_MIN_IN', 'TCP_WIN_MAX_IN', 'TCP_WIN_MSS_IN', 'TCP_FLAGS', 'FLOW_DURATION_MILLISECONDS', 'TCP_WIN_MAX_OUT', 'TCP_WIN_MIN_OUT', 'SRC_TOS', 'DST_TOS','ALERT' ]
+
+
+'''
+
+'''
+ 2 - Chi square
+'''
+
+'''
+
+req_cols =  [ 'FLOW_DURATION_MILLISECONDS', 'PROTOCOL', 'TCP_WIN_MAX_IN', 'TCP_WIN_MAX_OUT', 'TCP_WIN_MIN_IN', 'TCP_WIN_MIN_OUT', 'TCP_WIN_SCALE_IN', 'TCP_WIN_SCALE_OUT', 'SRC_TOS', 'DST_TOS','ALERT' ]
+
+
+'''
+
+'''
+ 3 - Feature Correlation
+'''
+
+'''
+req_cols =  [ 'TCP_WIN_MSS_IN', 'TCP_WIN_MIN_IN', 'TCP_WIN_MAX_IN', 'TCP_WIN_SCALE_IN', 'PROTOCOL', 'TCP_WIN_MAX_OUT', 'TCP_WIN_MIN_OUT', 'TCP_WIN_SCALE_OUT', 'FIRST_SWITCHED', 'LAST_SWITCHED','ALERT' ]
+
+'''
+
+'''
+ 4 - Feature Importance
+'''
+
+'''
+
+req_cols =  [ 'TCP_WIN_MSS_IN', 'TCP_WIN_MAX_IN', 'TCP_WIN_MIN_IN', 'TCP_WIN_SCALE_IN', 'TCP_FLAGS', 'FLOW_DURATION_MILLISECONDS', 'TCP_WIN_MAX_OUT', 'TCP_WIN_MIN_OUT', 'TOTAL_FLOWS_EXP', 'LAST_SWITCHED','ALERT' ]
+
+'''
+
+'''
+ 5 - Models + attacks
+'''
+
+'''
+req_cols =  [ 'TCP_WIN_MSS_IN', 'TCP_WIN_MAX_IN', 'TCP_WIN_SCALE_IN', 'TCP_WIN_MIN_IN', 'FLOW_DURATION_MILLISECONDS', 'TOTAL_FLOWS_EXP', 'TCP_FLAGS', 'PROTOCOL', 'TCP_WIN_MAX_OUT', 'SRC_TOS','ALERT' ]
+
+'''
+
+'''
+ 6 - Common features by overall weighted rank
+'''
+
+'''
+req_cols =  [ 'FLOW_DURATION_MILLISECONDS', 'FIRST_SWITCHED', 'TOTAL_FLOWS_EXP', 'LAST_SWITCHED', 'TCP_WIN_SCALE_IN', 'TCP_WIN_MSS_IN', 'TCP_WIN_MAX_IN', 'TCP_WIN_MIN_IN', 'PROTOCOL', 'TCP_FLAGS','ALERT' ]
+
+'''
+
+'''
+ 7 - Common features by overall normalized weighted rank
+'''
+
+'''
+req_cols =  [ 'TCP_WIN_SCALE_IN', 'FLOW_DURATION_MILLISECONDS', 'TCP_WIN_MSS_IN', 'TCP_WIN_MAX_IN', 'TCP_WIN_MIN_IN', 'TOTAL_FLOWS_EXP', 'FIRST_SWITCHED', 'TCP_FLAGS', 'TCP_WIN_MAX_OUT', 'PROTOCOL','ALERT' ]
+
+'''
+
+'''
+ 8 - Combined Selection
+'''
+
+'''
+
+req_cols =  [ 'TCP_WIN_SCALE_IN', 'TCP_WIN_MIN_IN', 'TCP_WIN_MAX_IN', 'TCP_WIN_MSS_IN', 'FLOW_DURATION_MILLISECONDS', 'TCP_WIN_MAX_OUT', 'TCP_FLAGS', 'PROTOCOL', 'TCP_WIN_MIN_OUT', 'TOTAL_FLOWS_EXP','ALERT']
+
+'''
+
+
+'''
+##################################### For K = 5 ################################################
+'''
+
+'''
+ 1 - Common features by overall rank
+'''
+
+'''
+
+req_cols =  [ 'TCP_WIN_SCALE_IN', 'TCP_WIN_MIN_IN', 'TCP_WIN_MAX_IN', 'TCP_WIN_MSS_IN', 'TCP_FLAGS','ALERT' ]
+
+
+'''
+
+'''
+ 2 - Chi square
+'''
+
+'''
+
+req_cols =  [ 'FLOW_DURATION_MILLISECONDS', 'PROTOCOL', 'TCP_WIN_MAX_IN', 'TCP_WIN_MAX_OUT', 'TCP_WIN_MIN_IN','ALERT' ]
+
+
+'''
+
+'''
+ 3 - Feature Correlation
+'''
+
+'''
+req_cols =  [ 'TCP_WIN_MSS_IN', 'TCP_WIN_MIN_IN', 'TCP_WIN_MAX_IN', 'TCP_WIN_SCALE_IN', 'PROTOCOL','ALERT' ]
+
+'''
+
+'''
+ 4 - Feature Importance
+'''
+
+'''
+
+req_cols =  [ 'TCP_WIN_MSS_IN', 'TCP_WIN_MAX_IN', 'TCP_WIN_MIN_IN', 'TCP_WIN_SCALE_IN', 'TCP_FLAGS','ALERT' ]
+
+'''
+
+'''
+ 5 - Models + attacks
+'''
+
+'''
+req_cols =  [ 'TCP_WIN_MSS_IN', 'TCP_WIN_MAX_IN', 'TCP_WIN_SCALE_IN', 'TCP_WIN_MIN_IN', 'FLOW_DURATION_MILLISECONDS', 'ALERT' ]
+
+'''
+
+'''
+ 6 - Common features by overall weighted rank
+'''
+
+'''
+req_cols =  [ 'FLOW_DURATION_MILLISECONDS', 'FIRST_SWITCHED', 'TOTAL_FLOWS_EXP', 'LAST_SWITCHED', 'TCP_WIN_SCALE_IN','ALERT' ]
+
+'''
+
+'''
+ 7 - Common features by overall normalized weighted rank
+'''
+
+'''
+req_cols =  [ 'TCP_WIN_SCALE_IN', 'FLOW_DURATION_MILLISECONDS', 'TCP_WIN_MSS_IN', 'TCP_WIN_MAX_IN', 'TCP_WIN_MIN_IN','ALERT' ]
+
+'''
+
+'''
+ 8 - Combined Selection
+'''
+
+
+'''
+req_cols =  [ 'TCP_WIN_SCALE_IN', 'TCP_WIN_MIN_IN', 'TCP_WIN_MAX_IN', 'TCP_WIN_MSS_IN', 'FLOW_DURATION_MILLISECONDS','ALERT']
+
+
+'''
+
+
+            
+
+#----------------------------------------------------------------------------------------------------------
+#Defining metric functions
+def ACC(TP,TN,FP,FN):
+    Acc = (TP+TN)/(TP+FP+FN+TN)
+    return Acc
+
+def PRECISION(TP,FP):
+    Precision = TP/(TP+FP)
+    return Precision
+def RECALL(TP,FN):
+    Recall = TP/(TP+FN)
+    return Recall
+def F1(Recall, Precision):
+    F1 = 2 * Recall * Precision / (Recall + Precision)
+    return F1
+def BACC(TP,TN,FP,FN):
+    BACC =(TP/(TP+FN)+ TN/(TN+FP))*0.5
+    return BACC
+def MCC(TP,TN,FP,FN):
+    MCC = (TN*TP-FN*FP)/(((TP+FP)*(TP+FN)*(TN+FP)*(TN+FN))**.5)
+    return MCC
+def AUC_ROC(y_test_bin,y_score):
+    fpr = dict()
+    tpr = dict()
+    roc_auc = dict()
+    auc_avg = 0
+    counting = 0
+    for i in range(n_classes):
+      fpr[i], tpr[i], _ = roc_curve(y_test_bin[:, i], y_score[:, i])
+     # plt.plot(fpr[i], tpr[i], color='darkorange', lw=2)
+      #print('AUC for Class {}: {}'.format(i+1, auc(fpr[i], tpr[i])))
+      auc_avg += auc(fpr[i], tpr[i])
+      counting = i+1
+    return auc_avg/counting
+   
+def oversample(X_train, y_train):
+    oversample = RandomOverSampler(sampling_strategy='minority')
+    # Convert to numpy and oversample
+    x_np = X_train.to_numpy()
+    y_np = y_train.to_numpy()
+    x_np, y_np = oversample.fit_resample(x_np, y_np)
+
+    # Convert back to pandas
+    x_over = pd.DataFrame(x_np, columns=X_train.columns)
+    y_over = pd.Series(y_np)
+    return x_over, y_over
+
+
+
+
+#----------------------------------------------------------------------------------------------------------
+#Loading Database
+
+#Denial of Service
+df0 = pd.read_csv ('sensor_db/dos-03-15-2022-15-44-32.csv', usecols=req_cols )
+df1 = pd.read_csv ('sensor_db/dos-03-16-2022-13-45-18.csv', usecols=req_cols)
+df2 = pd.read_csv ('sensor_db/dos-03-17-2022-16-22-53.csv', usecols=req_cols)
+df3 = pd.read_csv ('sensor_db/dos-03-18-2022-19-27-05.csv', usecols=req_cols)
+df4 = pd.read_csv ('sensor_db/dos-03-19-2022-20-01-53.csv', usecols=req_cols)
+df5 = pd.read_csv ('sensor_db/dos-03-20-2022-14-27-54.csv', usecols=req_cols) 
+
+#Malware
+df6 = pd.read_csv ('sensor_db/malware-03-25-2022-17-57-07.csv', usecols=req_cols)
+
+#Normal
+df7 = pd.read_csv  ('sensor_db/normal-03-15-2022-15-43-44.csv', usecols=req_cols)
+df8 = pd.read_csv  ('sensor_db/normal-03-16-2022-13-44-27.csv', usecols=req_cols)
+df9 = pd.read_csv  ('sensor_db/normal-03-17-2022-16-21-30.csv', usecols=req_cols)
+df10 = pd.read_csv ('sensor_db/normal-03-18-2022-19-17-31.csv', usecols=req_cols)
+df11 = pd.read_csv ('sensor_db/normal-03-18-2022-19-25-48.csv', usecols=req_cols)
+df12 = pd.read_csv ('sensor_db/normal-03-19-2022-20-01-16.csv', usecols=req_cols) 
+df13 = pd.read_csv ('sensor_db/normal-03-20-2022-14-27-30.csv', usecols=req_cols) 
+
+#PortScanning
+
+df14 = pd.read_csv  ('sensor_db/portscanning-03-15-2022-15-44-06.csv', usecols=req_cols)
+df15 = pd.read_csv  ('sensor_db/portscanning-03-16-2022-13-44-50.csv', usecols=req_cols)
+df16 = pd.read_csv  ('sensor_db/portscanning-03-17-2022-16-22-53.csv', usecols=req_cols)
+df17 = pd.read_csv  ('sensor_db/portscanning-03-18-2022-19-27-05.csv', usecols=req_cols)
+df18 = pd.read_csv  ('sensor_db/portscanning-03-19-2022-20-01-45.csv', usecols=req_cols)
+df19 = pd.read_csv  ('sensor_db/portscanning-03-20-2022-14-27-49.csv', usecols=req_cols) 
+
+#Merging Database in one pandas DF
+
+frames = [df0, df1, df2, df3, df4, df5, df7, df8, df9, df10, df11, df12, df13, df14, df15, df16, df17, df18, df19]
+#frames = [df2, df8, df16]
+  
+df = pd.concat(frames,ignore_index=True)
+
+df = df.sample(frac=0.05)
+'''
+df.pop('IPV4_SRC_ADDR')
+df.pop('IPV4_DST_ADDR')
+'''
+#----------------------------------------------------------------------------------------------------------
+
+
+y = df.pop('ALERT')
+y_original = y.copy()
+y_filled = y.fillna('Normal')   # replace NaN with an explicit, readable label
+le = LabelEncoder()
+y = le.fit_transform(y_filled.astype(str))
+y = pd.Series(y, index=y_filled.index)  # keep original row index so it aligns with X on assign()
+label_names = le.classes_ 
+
+X=df
+df = X.assign( ALERT = y)
+# Defining Train and Testing Dataset 60-40 split
+df['is_train'] = np.random.uniform(0, 1, len(df)) <= .70
+print(df.head())
+
+train, test = df[df['is_train']==True], df[df['is_train']==False]
+print('Number of the training data:', len(train))
+print('Number of the testing data:', len(test))
+
+#features = df.columns[:15]
+features = df.columns[:len(req_cols)-1]
+
+y_train, label = pd.factorize(train['ALERT'])
+
+X_train = np.array(train[features])
+
+X_train,X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, train_size=0.70)
+df = X.assign( ALERT = y)
+
+#----------------------------------------
+print('---------------------------------------------------------------------------------')
+print('Balance Datasets')
+print('---------------------------------------------------------------------------------')
+print('')
+counter = Counter(y_train)
+print(counter)
+
+# call balance operation until all labels have the same size
+counter_list = list(counter.values())
+for i in range(1,len(counter_list)):
+    if counter_list[i-1] != counter_list[i]:
+        X_train, y_train = oversample(X_train, y_train)
+
+counter = Counter(y_train)
+print('train len',counter)
+
+# # After OverSampling training dataset
+
+X_train = X_train.assign( ALERT = y_train)
+
+#Drop ALert column from train
+X_train.pop('ALERT')
+labels_train_number, labels_train_label = pd.factorize(y_train)
+labels_test_number, labels_test_label = pd.factorize(y_test)
+
+# # Oversampling and balancing test data
+
+counter = Counter(y_test)
+print(counter)
+counter_list = list(counter.values())
+for i in range(1,len(counter_list)):
+    if counter_list[i-1] != counter_list[i]:
+        X_test, y_test = oversample(X_test,y_test)
+
+
+
+counter = Counter(y_test)
+print('test len ', counter)
+
+#joining features and label
+X_test = X_test.assign(ALERT = y_test)
+
+#Randomize df order
+X_test = X_test.sample(frac = 1)
+#Drop label column
+y_test = X_test.pop('ALERT')
+
+y = y_test
+
+#----------------------------------------------------------------------------------------------------------
+#Model Construction
+
+abc = AdaBoostClassifier(n_estimators=50,learning_rate=0.2)
+
+
+#----------------------------------------------------------------------------------------------------------
+#Running the model
+
+#START TIMER MODEL
+start = time.time()
+model = abc.fit(X_train, y_train)
+#END TIMER MODEL
+end = time.time()
+print('ELAPSE TIME MODEL: ',(end - start)/60, 'min')
+
+#----------------------------------------------------------------------------------------------------------
+#Data preprocessing
+X_test = np.array(test[features])
+
+#----------------------------------------------------------------------------------------------------------
+# Model predictions 
+
+#START TIMER PREDICTION
+start = time.time()
+
+y_pred = model.predict(X_test)
+
+#END TIMER PREDICTION
+end = time.time()
+print('ELAPSE TIME PREDICTION: ',(end - start)/60, 'min')
+
+#----------------------------------------------------------------------------------------------------------
+
+y_test, label2 = pd.factorize(test['ALERT'])
+pred_label, label3 = pd.factorize(y_pred)
+
+#print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+
+#pred_label = y_pred
+
+#----------------------------------------------------------------------------------------------------------
+# Confusion Matrix
+print('---------------------------------------------------------------------------------')
+print('Generating Confusion Matrix')
+print('---------------------------------------------------------------------------------')
+print('')
+
+
+confusion_matrix = pd.crosstab(y_test, pred_label,rownames=['Actual ALERT'],colnames = ['Predicted ALERT'], dropna=False).sort_index(axis=0).sort_index(axis=1)
+all_unique_values = sorted(set(pred_label) | set(y_test))
+z = np.zeros((len(all_unique_values), len(all_unique_values)))
+rows, cols = confusion_matrix.shape
+z[:rows, :cols] = confusion_matrix
+confusion_matrix  = pd.DataFrame(z, columns=all_unique_values, index=all_unique_values)
+print(confusion_matrix)
+
+
+#True positives and False positives and negatives
+FP = confusion_matrix.sum(axis=0) - np.diag(confusion_matrix)  
+FN = confusion_matrix.sum(axis=1) - np.diag(confusion_matrix)
+TP = np.diag(confusion_matrix)
+TN = confusion_matrix.values.sum() - (FP + FN + TP)
+#Sum each Labels TP,TN,FP,FN in one overall measure
+TP_total = sum(TP)
+TN_total = sum(TN)
+FP_total = sum(FP)
+FN_total = sum(FN)
+
+#data preprocessin because numbers are getting big
+TP_total = np.array(TP_total,dtype=np.float64)
+TN_total = np.array(TN_total,dtype=np.float64)
+FP_total = np.array(FP_total,dtype=np.float64)
+FN_total = np.array(FN_total,dtype=np.float64)
+
+#----------------------------------------------------------------------------------------------------------
+#Metrics measure overall
+Acc = ACC(TP_total,TN_total, FP_total, FN_total)
+Precision = PRECISION(TP_total, FP_total)
+Recall = RECALL(TP_total, FN_total)
+F1 = F1(Recall,Precision)
+BACC = BACC(TP_total,TN_total, FP_total, FN_total)
+MCC = MCC(TP_total,TN_total, FP_total, FN_total)
+print('Accuracy: ', Acc)
+print('Precision: ', Precision )
+print('Recall: ', Recall )
+print('F1: ', F1 )
+print('BACC: ', BACC)
+print('MCC: ', MCC)
+#Metrics for each label
+# Loop safely through the length of your TP numpy array
+safe_keys = list(TP.index) if hasattr(TP, 'index') else list(range(len(TP)))
+
+for i in safe_keys:
+    # Safely compute accuracy for keys that are guaranteed to exist
+    Acc = ACC(TP[i], TN[i], FP[i], FN[i])
+    
+    # Safely look up the human-readable class name
+    class_label = label[i] if ('label' in globals() and i < len(label)) else f"Class {i}"
+    
+    print('Accuracy for', class_label, '-', Acc)
+
+#----------------------------------------
+y_score = abc.predict_proba(test[features])
+y_test_bin = label_binarize(y_test,classes = [0,1,2])
+n_classes = y_test_bin.shape[1]
+print('AUC_ROC total: ',AUC_ROC(y_test_bin,y_score))
+# ==================== Phase 2: Global SHAP Feature Importance ====================
+def _phase2_plot_global_shap(raw_values, X_explain, class_names, output_png, output_csv, title):
+    """Create a stacked horizontal mean(|SHAP|) feature-importance plot."""
+    values = raw_values.values if hasattr(raw_values, 'values') else raw_values
+    if isinstance(values, list):
+        values = np.stack([np.asarray(v) for v in values], axis=-1)
+    else:
+        values = np.asarray(values)
+        if values.ndim == 2:
+            values = values[:, :, None]
+        elif values.ndim != 3:
+            raise ValueError(f"Unexpected SHAP value shape: {values.shape}")
+
+    # Normalize common SHAP multiclass layouts to: samples x features x classes.
+    n_samples = len(X_explain)
+    n_features = X_explain.shape[1]
+    n_classes = len(class_names)
+    if values.shape[0] != n_samples:
+        if values.shape[1] == n_samples and values.shape[2] == n_features:
+            values = np.moveaxis(values, 1, 0)
+        elif values.shape[2] == n_samples and values.shape[1] == n_features:
+            values = np.moveaxis(values, 2, 0)
+    if values.shape[0] == n_samples and values.shape[1] != n_features:
+        if values.shape[2] == n_features and values.shape[1] == n_classes:
+            values = np.moveaxis(values, 1, 2)
+    if values.shape[-1] != n_classes and values.shape[0] == n_classes:
+        values = np.moveaxis(values, 0, -1)
+
+    if values.shape[0] != n_samples or values.shape[1] != n_features:
+        raise ValueError(f"Could not align SHAP values {values.shape} with X {X_explain.shape}")
+
+    class_importance = np.mean(np.abs(values), axis=0)
+    total_importance = class_importance.sum(axis=1)
+    top_n = min(15, n_features)
+    order = np.argsort(total_importance)[::-1][:top_n]
+
+    feature_names = list(X_explain.columns)
+    top_names = [feature_names[i] for i in order][::-1]
+    top_importance = class_importance[order][::-1]
+
+    fig, ax = plt.subplots(figsize=(9, 7))
+    left = np.zeros(top_n)
+    class_count = top_importance.shape[1]
+    colors = plt.cm.tab10(np.linspace(0, 1, class_count))
+    for c in range(class_count):
+        vals = top_importance[:, c]
+        ax.barh(top_names, vals, left=left, label=str(class_names[c]), color=colors[c])
+        left += vals
+
+    ax.set_xlabel('mean(|SHAP value|) (average impact on model output)')
+    ax.set_ylabel('')
+    ax.set_title(title)
+    ax.legend(title='Class', loc='lower right', fontsize=8)
+    fig.tight_layout()
+    fig.savefig(output_png, dpi=300, bbox_inches='tight')
+    plt.close(fig)
+
+    table = pd.DataFrame(top_importance, columns=[str(x) for x in class_names], index=top_names)
+    table.index.name = 'Feature'
+    table['Total mean(|SHAP|)'] = table.sum(axis=1)
+    table.to_csv(output_csv)
+
+    print('Phase 2 SHAP figure saved:', output_png)
+    print('Phase 2 SHAP values saved:', output_csv)
+
+print('---------------------------------------------------------------------------------')
+print('Phase 2: Generating Global SHAP Feature Importance')
+print('---------------------------------------------------------------------------------')
+_phase2_X = test[features].iloc[:min(500, len(test))].copy()
+_phase2_background = _phase2_X.iloc[:min(50, len(_phase2_X))].copy()
+_phase2_explainer = shap.Explainer(abc.predict_proba, _phase2_background)
+_phase2_shap = _phase2_explainer(_phase2_X)
+_phase2_classes = [str(x) for x in le.inverse_transform(abc.classes_)]
+_phase2_plot_global_shap(
+    _phase2_shap,
+    _phase2_X,
+    _phase2_classes,
+    'ADA_Shap_Global_Feature_Importance.png',
+    'ADA_Shap_Global_Feature_Importance.csv',
+    'ADA - Global SHAP Feature Importance'
+)
+#----------------------------------------------------------------------------------------------------------
